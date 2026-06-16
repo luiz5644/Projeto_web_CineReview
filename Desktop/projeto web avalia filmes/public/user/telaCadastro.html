@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro | CineReview</title>
+
+    <style>
+      :root {
+        --bg: #121212;
+        --card: #1e1e1e;
+        --primary: #e50914;
+        --border: #333;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: var(--bg);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .card {
+        width: 450px;
+        background: var(--card);
+        padding: 40px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+      }
+
+      h1 {
+        text-align: center;
+        color: var(--primary);
+        margin-bottom: 25px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #2b2b2b;
+        color: white;
+      }
+
+      textarea {
+        height: 100px;
+        resize: vertical;
+      }
+
+      input[type="file"] {
+        padding: 8px;
+        background: transparent;
+        border: 1px dashed var(--border);
+        cursor: pointer;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary);
+        border: none;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background: #b80710;
+      }
+
+      .links {
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Criar Conta</h1>
+
+      <form action="/register" method="POST" enctype="multipart/form-data">
+        <input type="text" name="nome" placeholder="Nome" required />
+
+        <input type="email" name="email" placeholder="Email" required />
+
+        <input type="password" name="senha" placeholder="Senha" required />
+
+        <textarea name="bio" placeholder="Escreva uma breve bio..."></textarea>
+
+        <label
+          style="
+            color: #aaa;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 5px;
+          "
+          >Foto de Perfil:</label
+        >
+        <input type="file" name="foto_perfil" accept="image/*" />
+
+        <button type="submit">Cadastrar</button>
+      </form>
+
+      <div class="links">
+        <a href="admTelaLogin.html">Já possui conta? Entrar</a>
+      </div>
+    </div>
+  </body>
+</html>

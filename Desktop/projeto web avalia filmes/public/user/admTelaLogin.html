@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | CineReview</title>
+    <style>
+      :root {
+        --bg: #121212;
+        --card: #1e1e1e;
+        --primary: #e50914;
+        --border: #333;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+      body {
+        background: var(--bg);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .login-container {
+        background: var(--card);
+        padding: 40px;
+        border-radius: 8px;
+        width: 100%;
+        max-width: 400px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      }
+      .logo {
+        color: var(--primary);
+        font-size: 32px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      h2 {
+        margin-bottom: 20px;
+        font-size: 22px;
+        text-align: center;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #aaa;
+        font-size: 14px;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        background: #2b2b2b;
+        color: white;
+        font-size: 16px;
+      }
+      input:focus {
+        border-color: var(--primary);
+        outline: none;
+      }
+      button {
+        width: 100%;
+        padding: 14px;
+        background: var(--primary);
+        border: none;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      button:hover {
+        background: #b80710;
+      }
+      .error-message {
+        background: #5d1b1b;
+        color: #f7c8c8;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        display: none;
+        text-align: center;
+        font-size: 14px;
+      }
+      .register-link {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+      }
+      .register-link a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .register-link a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="logo">CineReview</div>
+      <h2>Entrar na Conta</h2>
+
+      <div id="erro-container" class="error-message"></div>
+
+      <form id="loginForm">
+        <label for="email">E-mail</label>
+        <input
+          type="email"
+          id="email"
+          required
+          placeholder="seuemail@exemplo.com"
+        />
+
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" required placeholder="••••••••" />
+
+        <button type="submit">Acessar Sistema</button>
+      </form>
+
+      <div class="register-link">
+        <p>
+          Não tem uma conta? <a href="/telaCadastro.html">Cadastre-se aqui</a>
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("loginForm");
+      const erroContainer = document.getElementById("erro-container");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        erroContainer.style.display = "none";
+
+        const email = document.getElementById("email").value.trim();
+        const senha = document.getElementById("senha").value;
+
+        try {
+          // Faz a requisição para a rota de autenticação do seu router.ts
+          const response = await fetch("/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, senha }),
+          });
+
+          const dados = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              dados.erro || "Falha ao realizar login. Verifique os dados.",
+            );
+          }
+
+          // Salva um estado indicando que o usuário efetuou o login
+          localStorage.setItem("usuario_logado", "true");
+          if (dados.token) {
+            localStorage.setItem("token_cinereview", dados.token);
+          }
+
+          // Redireciona para a tela inicial após o sucesso
+          window.location.href = "/telaInicial.html";
+        } catch (error) {
+          erroContainer.textContent = error.message;
+          erroContainer.style.display = "block";
+        }
+      });
+    </script>
+  </body>
+</html>

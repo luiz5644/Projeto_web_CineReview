@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineReview | Início</title>
+    <script>
+        // SEGURANÇA: Impede acesso direto se não passou pela tela de login
+        if (!localStorage.getItem('usuario_logado')) {
+            window.location.href = '/';
+        }
+    </script>
+    <style>
+        :root {
+            --bg: #121212;
+            --card: #1e1e1e;
+            --primary: #e50914;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        body {
+            background: var(--bg);
+            color: white;
+        }
+        header {
+            background: #1a1a1a;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+        .logo {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .menu a:hover {
+            color: var(--primary);
+        }
+        main {
+            padding: 40px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #2b2b2b;
+        }
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .btn-sair {
+            color: #aaa !important;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">CineReview</div>
+        <div class="menu" id="nav-menu">
+            <a href="telaPerfil.html">Perfil</a>
+            <a href="favoritos.html">Favoritos</a>
+            <a href="minhasAvaliacoes.html">Avaliações</a>
+            <a id="btnEfetuarLogout" class="btn-sair">Sair</a>
+        </div>
+    </header>
+
+    <main>
+        <h2>Filmes no Banco Local</h2>
+        <br>
+        <div id="filmes" class="grid"></div>
+    </main>
+
+    <script>
+        // Remove a marcação de login ao clicar em Sair
+        document.getElementById('btnEfetuarLogout').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/';
+        });
+
+        async function verificarPermissaoECarregar() {
+            try {
+                const respostaMe = await fetch('/api/me');
+                if (respostaMe.ok) {
+                    const usuario = await respostaMe.json();
+                    if (usuario.role === 'ADMIN') {
+                        const menu = document.getElementById('nav-menu');
+                        const linkAdmin = document.createElement('a');
+                        linkAdmin.href = 'telaCadastrarFilme.html';
+                        linkAdmin.textContent = 'Cadastrar Filme';
+                        menu.insertBefore(linkAdmin, document.getElementById('btnEfetuarLogout'));
+                    }
+                }
+            } catch (erro) {
+                console.error('Erro ao validar privilégios do usuário:', erro);
+            }
+        }
+
+        async function carregarFilmes() {
+            try {
+                const resposta = await fetch('/api/filmes/locais');
+                const filmes = await resposta.json();
+                const div = document.getElementById('filmes');
+
+                if (!filmes || filmes.length === 0) {
+                    div.innerHTML = '<p style="color: #aaa;">Nenhum filme avaliado localmente ainda.</p>';
+                    return;
+                }
+
+                div.innerHTML = filmes.map(f => `
+                    <div class="card">
+                        <h3>${f.titulo}</h3>
+                        <p>Ano: ${f.ano_lancamento || 'Não informado'}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao buscar lista de filmes locais:', error);
+            }
+        }
+
+        verificarPermissaoECarregar();
+        carregarFilmes();
+    </script>
+</body>
+</html>

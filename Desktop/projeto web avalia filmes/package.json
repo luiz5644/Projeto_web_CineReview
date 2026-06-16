@@ -1,0 +1,26 @@
+{
+  "name": "api-catalogo-filmes",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "sistema": "tsx src/routes/server.ts",
+    "catalogo": "tsx src/routes/server-catalogo.ts"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "express-session": "^1.19.0",
+    "multer": "^2.1.1",
+    "pg": "^8.21.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.21",
+    "@types/express-session": "^1.19.0",
+    "@types/multer": "^2.1.0",
+    "@types/pg": "^8.20.0",
+    "cors": "^2.8.6",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
